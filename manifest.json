@@ -7,7 +7,14 @@
     "default_popup": "popup.html",
     "default_icon": "images/icon.svg"
   },
-  "permissions": ["activeTab"],
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "web_accessible_resources": [{
+    "resources": ["prompt.txt"],
+    "matches": ["<all_urls>"]
+  }],
   "icons": {
     "128": "images/icon.svg"
   }
