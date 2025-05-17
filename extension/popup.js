@@ -13,31 +13,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Function to make API call to Claude
+  // Function to make API call through Python backend
   async function callClaudeAPI(url, prompt) {
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      console.log('Attempting to connect to backend...');
+      const response = await fetch('http://localhost:5001/analyze', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.CLAUDE_API_KEY,
-          'anthropic-version': '2023-06-01'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'claude-3-opus-20240229',
-          max_tokens: 1000,
-          messages: [{
-            role: 'user',
-            content: `${prompt}\nURL: ${url}`
-          }]
+          url: url,
+          prompt: prompt
         })
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
-      return data.content[0].text;
+      return data.analysis;
     } catch (error) {
-      console.error('Error calling Claude API:', error);
-      return 'Error: Could not get response from Claude AI';
+      console.error('Error calling backend:', error);
+      return `Error: Could not connect to backend service. Make sure the Python server is running. Details: ${error.message}`;
     }
   }
 
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // Call Claude API
+      // Call Claude API through Python backend
       const analysis = await callClaudeAPI(currentTab.url, prompt);
       statusText.textContent = `Analysis: ${analysis}`;
     });

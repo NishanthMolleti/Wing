@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: wing-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false

@@ -1,0 +1,3 @@
+Now analyze the url and give me a set of 10 bullet points which are the most watched.
+These 10 points must be able to tell me the whole crux of what the video is trying to tell its audience. 
+Along with the the 10 bullet points, I will also need the time stamp of 3 most important points in the video.
