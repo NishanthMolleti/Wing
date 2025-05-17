@@ -2,6 +2,37 @@ document.addEventListener('DOMContentLoaded', function() {
   const actionButton = document.getElementById('actionButton');
   const statusText = document.getElementById('status');
 
+  // Test backend connection
+  async function testBackendConnection() {
+    try {
+      console.log('Testing backend connection...');
+      const response = await fetch('https://web-production-2be9.up.railway.app/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          url: 'https://example.com',
+          prompt: 'Test connection'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Backend connection successful:', data);
+      statusText.textContent = 'Backend connection successful! Ready to analyze.';
+    } catch (error) {
+      console.error('Backend connection test failed:', error);
+      statusText.textContent = `Backend connection failed: ${error.message}`;
+    }
+  }
+
+  // Run connection test when popup opens
+  testBackendConnection();
+
   // Function to read the prompt file
   async function readPromptFile() {
     try {
@@ -17,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
   async function callClaudeAPI(url, prompt) {
     try {
       console.log('Attempting to connect to backend...');
-      const response = await fetch('http://localhost:5001/analyze', {
+      const response = await fetch('https://web-production-2be9.up.railway.app/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -37,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return data.analysis;
     } catch (error) {
       console.error('Error calling backend:', error);
-      return `Error: Could not connect to backend service. Make sure the Python server is running. Details: ${error.message}`;
+      return `Error: Could not connect to backend service. Details: ${error.message}`;
     }
   }
 
