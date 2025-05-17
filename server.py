@@ -52,7 +52,7 @@ def analyze():
         ]
 
         model = genai.GenerativeModel(
-            model_name="gemini-2.0-flash",  # Using Gemini 2.0 Flash
+            model_name="gemini-1.5-pro",  # Using Gemini 2.0 Flash
             generation_config=generation_config,
             safety_settings=safety_settings
         )
