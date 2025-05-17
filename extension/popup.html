@@ -36,8 +36,25 @@
     }
     #status {
       margin-top: 15px;
-      color: #B0B0B0;
+      padding: 10px;
+      border-radius: 4px;
       font-size: 14px;
+      min-height: 20px;
+      word-wrap: break-word;
+      background-color: #363636;
+      border: 1px solid #4A4A4A;
+    }
+    .success {
+      color: #4CAF50;
+      border-color: #4CAF50;
+    }
+    .error {
+      color: #f44336;
+      border-color: #f44336;
+    }
+    .loading {
+      color: #2196F3;
+      border-color: #2196F3;
     }
   </style>
 </head>
@@ -45,7 +62,7 @@
   <div class="container">
     <h2>Basic Chrome Extension</h2>
     <button id="actionButton">Click Me!</button>
-    <p id="status"></p>
+    <div id="status">Checking connection...</div>
   </div>
   <script src="popup.js"></script>
 </body>

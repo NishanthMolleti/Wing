@@ -2,14 +2,22 @@ document.addEventListener('DOMContentLoaded', function() {
   const actionButton = document.getElementById('actionButton');
   const statusText = document.getElementById('status');
 
+  // Function to update status with style
+  function updateStatus(message, type = '') {
+    statusText.textContent = message;
+    statusText.className = type; // This will add the appropriate CSS class
+  }
+
   // Test backend connection
   async function testBackendConnection() {
     try {
       console.log('Testing backend connection...');
+      updateStatus('Testing connection...', 'loading');
       const response = await fetch('https://web-production-2be9.up.railway.app/analyze', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
           url: 'https://example.com',
@@ -18,15 +26,16 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       console.log('Backend connection successful:', data);
-      statusText.textContent = 'Backend connection successful! Ready to analyze.';
+      updateStatus('Backend connection successful! Ready to analyze.', 'success');
     } catch (error) {
       console.error('Backend connection test failed:', error);
-      statusText.textContent = `Backend connection failed: ${error.message}`;
+      updateStatus(`Backend connection failed: ${error.message}`, 'error');
     }
   }
 
@@ -48,10 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
   async function callClaudeAPI(url, prompt) {
     try {
       console.log('Attempting to connect to backend...');
+      updateStatus('Analyzing...', 'loading');
       const response = await fetch('https://web-production-2be9.up.railway.app/analyze', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
           url: url,
@@ -78,18 +89,18 @@ document.addEventListener('DOMContentLoaded', function() {
       const currentTab = tabs[0];
       
       // Update the status text with the URL
-      statusText.textContent = `Analyzing: ${currentTab.url}`;
+      updateStatus(`Analyzing: ${currentTab.url}`, 'loading');
       
       // Read the prompt file
       const prompt = await readPromptFile();
       if (!prompt) {
-        statusText.textContent = 'Error: Could not read prompt file';
+        updateStatus('Error: Could not read prompt file', 'error');
         return;
       }
 
       // Call Claude API through Python backend
       const analysis = await callClaudeAPI(currentTab.url, prompt);
-      statusText.textContent = `Analysis: ${analysis}`;
+      updateStatus(`Analysis: ${analysis}`, analysis.startsWith('Error') ? 'error' : 'success');
     });
   });
 }); 
