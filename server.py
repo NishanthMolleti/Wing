@@ -24,12 +24,12 @@ def analyze():
         return jsonify({'error': 'Missing URL or prompt'}), 400
 
     try:
-        # Initialize Gemini model with optimized settings for 2.0 Flash
+        # Initialize Gemini model with optimized settings for 2.5 Pro
         generation_config = {
-            "temperature": 0.4,  # Lower temperature for more focused responses
-            "top_p": 0.8,       # Slightly lower for more focused sampling
-            "top_k": 32,        # Increased for better diversity while maintaining quality
-            "max_output_tokens": 4096,  # Increased token limit for more detailed responses
+            "temperature": 0.3,  # Even lower temperature for more precise responses
+            "top_p": 0.95,      # Higher top_p for more focused sampling
+            "top_k": 40,        # Increased for better quality
+            "max_output_tokens": 8192,  # Increased token limit for comprehensive responses
         }
 
         safety_settings = [
@@ -52,7 +52,7 @@ def analyze():
         ]
 
         model = genai.GenerativeModel(
-            model_name="gemini-2.0-flash",  # Updated to 2.0 Flash
+            model_name="gemini-2.5-pro",  # Updated to 2.5 Pro
             generation_config=generation_config,
             safety_settings=safety_settings
         )
