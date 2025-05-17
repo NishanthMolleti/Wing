@@ -1,3 +1,7 @@
-Now analyze the url and give me a set of 10 bullet points which are the most watched.
-These 10 points must be able to tell me the whole crux of what the video is trying to tell its audience. 
-Along with the the 10 bullet points, I will also need the time stamp of 3 most important points in the video.
+Please analyze this URL and provide a concise summary with the following structure:
+
+1. Main Topic: A one-sentence overview of the content
+2. Key Points: 10 bullet points that capture the most important aspects
+3. Critical Moments: 3 timestamps with brief explanations of why they're important
+
+Format the response with clear sections and bullet points. Each point should be on a new line for better readability.

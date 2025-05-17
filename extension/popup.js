@@ -8,6 +8,23 @@ document.addEventListener('DOMContentLoaded', function() {
     statusText.className = type; // This will add the appropriate CSS class
   }
 
+  // Function to format the analysis text
+  function formatAnalysis(text) {
+    // Split the text into lines and clean up
+    const lines = text.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .map(line => {
+        // Remove asterisks and clean up bullet points
+        return line.replace(/\*\*/g, '')
+                  .replace(/\*/g, '')
+                  .replace(/^•\s*/, '• ')
+                  .replace(/^-\s*/, '• ');
+      });
+    
+    return lines.join('\n');
+  }
+
   // Test backend connection
   async function testBackendConnection() {
     try {
@@ -54,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Function to make API call through Python backend
-  async function callClaudeAPI(url, prompt) {
+  async function callGeminiAPI(url, prompt) {
     try {
       console.log('Attempting to connect to backend...');
       updateStatus('Analyzing...', 'loading');
@@ -87,9 +104,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the current active tab
     chrome.tabs.query({active: true, currentWindow: true}, async function(tabs) {
       const currentTab = tabs[0];
+      const currentUrl = currentTab.url;
       
       // Update the status text with the URL
-      updateStatus(`Analyzing: ${currentTab.url}`, 'loading');
+      updateStatus(`Analyzing: ${currentUrl}`, 'loading');
       
       // Read the prompt file
       const prompt = await readPromptFile();
@@ -98,9 +116,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // Call Claude API through Python backend
-      const analysis = await callClaudeAPI(currentTab.url, prompt);
-      updateStatus(`Analysis: ${analysis}`, analysis.startsWith('Error') ? 'error' : 'success');
+      // Call Gemini API through Python backend
+      const analysis = await callGeminiAPI(currentUrl, prompt);
+      if (analysis.startsWith('Error')) {
+        updateStatus(analysis, 'error');
+      } else {
+        const formattedAnalysis = formatAnalysis(analysis);
+        updateStatus(`URL: ${currentUrl}\n\nAnalysis:\n${formattedAnalysis}`, 'success');
+      }
     });
   });
 }); 

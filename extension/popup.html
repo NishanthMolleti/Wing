@@ -4,7 +4,7 @@
   <title>Basic Chrome Extension</title>
   <style>
     body {
-      width: 300px;
+      width: 400px;
       padding: 20px;
       font-family: Arial, sans-serif;
       background-color: #2C2C2C;
@@ -36,13 +36,18 @@
     }
     #status {
       margin-top: 15px;
-      padding: 10px;
+      padding: 15px;
       border-radius: 4px;
       font-size: 14px;
       min-height: 20px;
+      max-height: 400px;
+      overflow-y: auto;
       word-wrap: break-word;
       background-color: #363636;
       border: 1px solid #4A4A4A;
+      text-align: left;
+      white-space: pre-wrap;
+      line-height: 1.5;
     }
     .success {
       color: #4CAF50;
