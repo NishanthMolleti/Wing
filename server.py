@@ -24,7 +24,7 @@ def analyze():
         return jsonify({'error': 'Missing URL or prompt'}), 400
 
     try:
-        # Initialize Gemini model with optimized settings for 2.5 Pro
+        # Initialize Gemini model with optimized settings for Pro
         generation_config = {
             "temperature": 0.3,  # Even lower temperature for more precise responses
             "top_p": 0.95,      # Higher top_p for more focused sampling
@@ -52,7 +52,7 @@ def analyze():
         ]
 
         model = genai.GenerativeModel(
-            model_name="gemini-2.5-pro",  # Updated to 2.5 Pro
+            model_name="gemini-pro",  # Correct model name for Gemini Pro
             generation_config=generation_config,
             safety_settings=safety_settings
         )
