@@ -24,12 +24,12 @@ def analyze():
         return jsonify({'error': 'Missing URL or prompt'}), 400
 
     try:
-        # Initialize Gemini model with safety settings
+        # Initialize Gemini model with optimized settings for 2.0 Flash
         generation_config = {
-            "temperature": 0.7,
-            "top_p": 1,
-            "top_k": 1,
-            "max_output_tokens": 2048,
+            "temperature": 0.4,  # Lower temperature for more focused responses
+            "top_p": 0.8,       # Slightly lower for more focused sampling
+            "top_k": 32,        # Increased for better diversity while maintaining quality
+            "max_output_tokens": 4096,  # Increased token limit for more detailed responses
         }
 
         safety_settings = [
@@ -52,14 +52,20 @@ def analyze():
         ]
 
         model = genai.GenerativeModel(
-            model_name="gemini-1.5-pro",
+            model_name="gemini-2.0-flash",  # Updated to 2.0 Flash
             generation_config=generation_config,
             safety_settings=safety_settings
         )
         
-        # Create the full prompt
-        full_prompt = f"{prompt}\nURL: {url}"
-        
+        # Create the full prompt with more context
+        full_prompt = f"""You are a precise and efficient content analyzer. Your task is to analyze the following URL and provide a detailed summary.
+
+{prompt}
+
+URL to analyze: {url}
+
+Please provide a thorough analysis focusing on accuracy and key insights. If you cannot access the content directly, please state this clearly rather than making assumptions. Format your response with clear sections and bullet points for better readability."""
+
         # Generate response
         response = model.generate_content(full_prompt)
         
